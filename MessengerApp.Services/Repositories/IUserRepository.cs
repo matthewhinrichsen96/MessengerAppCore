@@ -4,15 +4,15 @@ namespace MessengerApp.Services.Repositories;
 
 public interface IUserRepository
 {
-    Task<Users> CreateUserAsync(Users user);
+    Task<User> CreateUserAsync(User user);
 
-    Task<Users> UpdateUserAsync(Users user);
+    Task<User> UpdateUserAsync(User user);
 
     Task DeleteUserAsync(int userId);
 
-    Task<Users> GetUserByIdAsync(int userId);
+    Task<User> GetUserByIdAsync(int userId);
 
-    Task<Users> GetUserByUserNameAsync(string userName);
+    Task<User> GetUserByUserNameAsync(string userName);
 
-    Task<IEnumerable<Users>> GetAllUsersAsync();
+    Task<IEnumerable<User>> GetAllUsersAsync();
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MessengerApp.Services.Models.Users;
 
-public class Users
+public class User
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Key]

@@ -13,7 +13,7 @@ public class AppDbContext(IConfiguration configuration) : DbContext
         options.UseNpgsql(_configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public DbSet<Users> Users { get; set; }
+    public DbSet<User> Users { get; set; }
 
     public DbSet<Team> Teams { get; set; }
 }

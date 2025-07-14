@@ -9,17 +9,17 @@ public class UserRepository(IConfiguration configuration) : IUserRepository
     private readonly IConfiguration _configuration = configuration;
     private readonly AppDbContext _dbContext = new(configuration);
 
-    public async Task<Users> CreateUserAsync(Users user)
+    public async Task<User> CreateUserAsync(User user)
     {
-        _dbContext.Set<Users>().Add(user);
+        _dbContext.Set<User>().Add(user);
         await _dbContext.SaveChangesAsync();
 
         return user;
     }
 
-    public async Task<Users> UpdateUserAsync(Users user)
+    public async Task<User> UpdateUserAsync(User user)
     {
-       _dbContext.Set<Users>().Update(user);
+       _dbContext.Set<User>().Update(user);
        await _dbContext.SaveChangesAsync();
 
         return user;
@@ -27,29 +27,29 @@ public class UserRepository(IConfiguration configuration) : IUserRepository
 
     public async Task DeleteUserAsync(int userId)
     {
-        var user = _dbContext.Set<Users>().FirstOrDefault(u => u.UserId == userId);
+        var user = _dbContext.Set<User>().FirstOrDefault(u => u.UserId == userId);
 
         _dbContext.RemoveRange(user!);
 
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task<Users> GetUserByIdAsync(int userId)
+    public Task<User> GetUserByIdAsync(int userId)
     {
-        var user = _dbContext.Set<Users>().FirstOrDefault(u => u.UserId == userId);
+        var user = _dbContext.Set<User>().FirstOrDefault(u => u.UserId == userId);
 
         return Task.FromResult(user!);
     }
 
-    public Task<Users> GetUserByUserNameAsync(string userName)
+    public Task<User> GetUserByUserNameAsync(string userName)
     {
-        var user = _dbContext.Set<Users>().FirstOrDefault(u => u.UserName == userName);
+        var user = _dbContext.Set<User>().FirstOrDefault(u => u.UserName == userName);
 
         return Task.FromResult(user!);
     }
 
-    public Task<IEnumerable<Users>> GetAllUsersAsync()
+    public Task<IEnumerable<User>> GetAllUsersAsync()
     {
-        return Task.FromResult<IEnumerable<Users>>(_dbContext.Set<Users>().ToList());
+        return Task.FromResult<IEnumerable<User>>(_dbContext.Set<User>().ToList());
     }
 } 
