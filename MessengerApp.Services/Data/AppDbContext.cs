@@ -15,5 +15,5 @@ public class AppDbContext(IConfiguration configuration) : DbContext
 
     public DbSet<Users> Users { get; set; }
 
-    public DbSet<Teams> Teams { get; set; }
+    public DbSet<Team> Teams { get; set; }
 }

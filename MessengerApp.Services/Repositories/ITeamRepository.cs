@@ -4,15 +4,15 @@ namespace MessengerApp.Services.Repositories;
 
 public interface ITeamRepository
 {
-    Task CreateTeam(Teams team);
+    Task CreateTeam(Team team);
 
-    Task UpdateTeam(Teams team);
+    Task UpdateTeam(Team team);
 
     Task DeleteTeam(int teamId);
 
-    Task<IEnumerable<Teams>> GetTeams();
+    Task<IEnumerable<Team>> GetTeams();
 
-    Task<Teams> GetTeam(int teamId);
+    Task<Team> GetTeam(int teamId);
 
-    Task<Teams> GetTeamByName(string teamName);
+    Task<Team> GetTeamByName(string teamName);
 }

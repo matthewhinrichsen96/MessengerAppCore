@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MessengerApp.Services.Models.Teams;
 using MessengerApp.Services.Repositories;
+using MessengerApp.WebAPI.Filters;
 
 namespace MessengerApp.WebAPI.Controllers;
 
@@ -8,102 +9,59 @@ namespace MessengerApp.WebAPI.Controllers;
 [Route("api/[controller]")]
 
 public class TeamsController(
-    ILogger<TeamsController> logger,
     ITeamRepository teamRepository) : ControllerBase
 {
-    private readonly ILogger<TeamsController> _logger = logger;
-
-    [HttpGet(Name = "AllTeams")]
-    [Route("AllTeams")]
-    public async Task<IActionResult> teams()
+    [TypeFilter(typeof(ApiExceptionFilter))]
+    [HttpGet("")]
+    public async Task<IActionResult> GetAllTeams()
     {
-        try
-        {
-            var teams = await teamRepository.GetTeams();
-            return Ok(teams);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
+        var teams = await teamRepository.GetTeams();
+
+        return Ok(teams);
     }
 
-    [HttpGet(Name = "GetTeamById")]
-    [Route("Id/{id}")]
-    public async Task<IActionResult> GetteamById(int id)
+    [TypeFilter(typeof(ApiExceptionFilter))]
+    [HttpGet("by-id/{id}")]
+    public async Task<IActionResult> GetTeamById(int id)
     {
-        try
-        {
-            var team = await teamRepository.GetTeam(id);
-            return Ok(team);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
+        var team = await teamRepository.GetTeam(id);
+
+        return Ok(team);
     }
 
-    [HttpGet(Name = "GetTeamByteamname")]
-    [Route("TeamName/{teamName}")]
-    public async Task<IActionResult> GetTeamByteamName(string teamName)
+    [TypeFilter(typeof(ApiExceptionFilter))]
+    [HttpGet("by-name/{teamName}")]
+    public async Task<IActionResult> GetTeamByTeamName(string teamName)
     {
-        try
-        {
-            var teams = await teamRepository.GetTeamByName(teamName);
-            return Ok(teams);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
+        var team = await teamRepository.GetTeamByName(teamName);
+
+        return Ok(team);
     }
 
-    [HttpDelete(Name = "DeleteTeamById")]
-    [Route("Delete/{id}")]
-    public async Task<IActionResult> DeleteteamByteamId(int id)
+    [TypeFilter(typeof(ApiExceptionFilter))]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTeamById(int id)
     {
-        try
-        {
-            await teamRepository.DeleteTeam(id);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
+        await teamRepository.DeleteTeam(id);
+
+        return Ok("Team deleted");
     }
 
-    [HttpPost]
-    [Route("Create")]
-    public async Task<IActionResult> Createteam(Teams team)
+    [TypeFilter(typeof(ApiExceptionFilter))]
+    [HttpPost("")]
+    public async Task<IActionResult> CreateTeam([FromBody] Team team)
     {
-        try
-        {
-            await teamRepository.CreateTeam(team);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
+        await teamRepository.CreateTeam(team);
+
+        return CreatedAtAction(nameof(GetTeamById), new {id = team.TeamId }, team);
     }
 
-    [HttpPost]
-    [Route("GroupCreate")]
-    public async Task<IActionResult> Createteam(IEnumerable<Teams> teams)
+    [TypeFilter(typeof(ApiExceptionFilter))]
+    [HttpPost("Batch")]
+    public async Task<IActionResult> CreateMultipleTeams([FromBody] IEnumerable<Team> teams)
     {
-        try
-        {
-            foreach (var team in teams)
-            {
-                await teamRepository.CreateTeam(team);
-            }
+        await Task.WhenAll(teams.Select(teamRepository.CreateTeam));
 
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-        }
+        return Ok();
     }
 }

@@ -8,14 +8,14 @@ public class TeamRepository(IConfiguration configuration) : ITeamRepository
     private readonly IConfiguration _configuration = configuration;
     private readonly AppDbContext _dbContext = new(configuration);
 
-    public Task CreateTeam(Teams team)
+    public Task CreateTeam(Team team)
     {
         _dbContext.Teams.Add(team);
 
         return _dbContext.SaveChangesAsync();
     }
 
-    public Task UpdateTeam(Teams team)
+    public Task UpdateTeam(Team team)
     {
         _dbContext.Teams.Update(team);
 
@@ -24,27 +24,27 @@ public class TeamRepository(IConfiguration configuration) : ITeamRepository
 
     public Task DeleteTeam(int teamId)
     {
-        var team = _dbContext.Set<Teams>().FirstOrDefault(t => t.TeamId == teamId);
+        var team = _dbContext.Set<Team>().FirstOrDefault(t => t.TeamId == teamId);
         _dbContext.Teams.Remove(team!);
 
         return _dbContext.SaveChangesAsync();
     }
 
-    public Task<IEnumerable<Teams>> GetTeams()
+    public Task<IEnumerable<Team>> GetTeams()
     {
-        return Task.FromResult<IEnumerable<Teams>>(_dbContext.Set<Teams>().ToList());
+        return Task.FromResult<IEnumerable<Team>>(_dbContext.Set<Team>().ToList());
     }
 
-    public Task<Teams> GetTeam(int teamId)
+    public Task<Team> GetTeam(int teamId)
     {
-        var team = _dbContext.Set<Teams>().FirstOrDefault(t => t.TeamId == teamId);
+        var team = _dbContext.Set<Team>().FirstOrDefault(t => t.TeamId == teamId);
 
         return Task.FromResult(team!);
     }
 
-    public Task<Teams> GetTeamByName(string teamName)
+    public Task<Team> GetTeamByName(string teamName)
     {
-        var team = _dbContext.Set<Teams>().FirstOrDefault(t => t.Name == teamName);
+        var team = _dbContext.Set<Team>().FirstOrDefault(t => t.Name == teamName);
 
         return Task.FromResult(team!);
     }
