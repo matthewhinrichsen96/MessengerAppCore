@@ -1,51 +1,52 @@
 ﻿using MessengerApp.Services.Data;
 using MessengerApp.Services.Models.Teams;
+using Microsoft.EntityFrameworkCore;
 
 namespace MessengerApp.Services.Repositories;
 
-public class TeamRepository(IConfiguration configuration) : ITeamRepository
+public class TeamRepository(AppDbContext dbContext) : ITeamRepository
 {
-    private readonly IConfiguration _configuration = configuration;
-    private readonly AppDbContext _dbContext = new(configuration);
 
     public Task CreateTeam(Team team)
     {
-        _dbContext.Teams.Add(team);
+        dbContext.Teams.Add(team);
 
-        return _dbContext.SaveChangesAsync();
+        return dbContext.SaveChangesAsync();
     }
 
     public Task UpdateTeam(Team team)
     {
-        _dbContext.Teams.Update(team);
+        dbContext.Teams.Update(team);
 
-        return _dbContext.SaveChangesAsync();
+        return dbContext.SaveChangesAsync();
     }
 
-    public Task DeleteTeam(int teamId)
+    public async Task<int> DeleteTeam(int teamId)
     {
-        var team = _dbContext.Set<Team>().FirstOrDefault(t => t.TeamId == teamId);
-        _dbContext.Teams.Remove(team!);
+        var team = await dbContext.Teams.FirstOrDefaultAsync(t => t.TeamId == teamId);
 
-        return _dbContext.SaveChangesAsync();
+        if (team == null)
+        {
+            throw new InvalidOperationException($"Team with ID {teamId} not found.");
+        }
+
+        dbContext.Teams.Remove(team);
+
+        return await dbContext.SaveChangesAsync();
     }
 
-    public Task<IEnumerable<Team>> GetTeams()
+    public async Task<IEnumerable<Team?>> GetTeams()
     {
-        return Task.FromResult<IEnumerable<Team>>(_dbContext.Set<Team>().ToList());
+        return await dbContext.Teams.ToListAsync();
     }
 
-    public Task<Team> GetTeam(int teamId)
+    public async Task<Team?> GetTeam(int teamId)
     {
-        var team = _dbContext.Set<Team>().FirstOrDefault(t => t.TeamId == teamId);
-
-        return Task.FromResult(team!);
+        return await dbContext.Teams.FirstOrDefaultAsync(t => t.TeamId == teamId);
     }
 
-    public Task<Team> GetTeamByName(string teamName)
+    public async Task<Team?> GetTeamByName(string teamName)
     {
-        var team = _dbContext.Set<Team>().FirstOrDefault(t => t.Name == teamName);
-
-        return Task.FromResult(team!);
+        return await dbContext.Teams.FirstOrDefaultAsync(t => t.Name == teamName);
     }
 }

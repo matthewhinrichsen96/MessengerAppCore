@@ -1,24 +1,26 @@
+using MessengerApp.Services.Data;
 using MessengerApp.Services.Repositories;
+using Microsoft.EntityFrameworkCore;
 
-var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+const string myAllowSpecificOrigins = "AllowedHosts";
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
+    options.AddPolicy(name: myAllowSpecificOrigins,
         policy  =>
         {
             policy.WithOrigins("http://localhost:5173",
                 "https://localhost:5173");
         });
 });
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 var app = builder.Build();
@@ -28,7 +30,7 @@ var app = builder.Build();
 // {
 //     app.MapOpenApi();
 // }
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors(myAllowSpecificOrigins);
 app.UseHsts();
 app.UseHttpsRedirection();
 app.UseAuthorization();

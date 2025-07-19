@@ -49,7 +49,7 @@ public class TeamsController(
 
     [TypeFilter(typeof(ApiExceptionFilter))]
     [HttpPost("")]
-    public async Task<IActionResult> CreateTeam([FromBody] Team team)
+    public async Task<IActionResult> CreateTeam([FromBody] Team? team)
     {
         await teamRepository.CreateTeam(team);
 

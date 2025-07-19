@@ -8,11 +8,11 @@ public interface ITeamRepository
 
     Task UpdateTeam(Team team);
 
-    Task DeleteTeam(int teamId);
+    Task<int> DeleteTeam(int teamId);
 
-    Task<IEnumerable<Team>> GetTeams();
+    Task<IEnumerable<Team?>> GetTeams();
 
-    Task<Team> GetTeam(int teamId);
+    Task<Team?> GetTeam(int teamId);
 
-    Task<Team> GetTeamByName(string teamName);
+    Task<Team?> GetTeamByName(string teamName);
 }

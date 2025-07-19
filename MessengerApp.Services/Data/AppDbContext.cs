@@ -6,11 +6,9 @@ namespace MessengerApp.Services.Data;
 
 public class AppDbContext(IConfiguration configuration) : DbContext
 {
-    protected readonly IConfiguration _configuration = configuration;
-
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        options.UseNpgsql(_configuration.GetConnectionString("DefaultConnection"));
+        options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
     }
 
     public DbSet<User> Users { get; set; }
