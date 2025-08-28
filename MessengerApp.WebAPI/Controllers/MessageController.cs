@@ -2,29 +2,47 @@
 using MessengerApp.Services.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
 using MessengerApp.WebAPI.Filters;
+using MessengerApp.WebAPI.Models.Request.MessageRequest;
 
 namespace MessengerApp.WebAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 
-public class MessageController(IMessengerService messengerService) : ControllerBase
+public class MessageController(
+    IMessengerService messengerService) : ControllerBase
 {
     [TypeFilter(typeof(ApiExceptionFilter))]
     [HttpPost("")]
     public Task<IActionResult> SendMessage(Message message)
     {
-        messengerService.SendMessage(message);
+        try
+        {
+            messengerService.SendMessage(message);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+        }
 
-        return Task.FromResult<IActionResult>(Ok());
+        return Task.FromResult<IActionResult>(Ok("Message Sent"));
     }
 
     [TypeFilter(typeof(ApiExceptionFilter))]
     [HttpGet("")]
-    public async Task<IActionResult> GetMessages(string userId, string chatId)
+    public async Task<IActionResult> GetMessages(MessageRequest request)
     {
-        var messages = await messengerService.GetMessages(userId, chatId);
+        try
+        {
+            var messages = await messengerService.GetMessages(request.userId, request.chatId);
 
-        return Ok(messages);
+            return Ok(messages);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+
+            return BadRequest("Something went wrong");
+        }
     }
 }

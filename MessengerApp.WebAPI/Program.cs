@@ -1,5 +1,7 @@
 using MessengerApp.Services.Data;
 using MessengerApp.Services.Repositories;
+using MessengerApp.Services.Services;
+using MessengerApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 const string myAllowSpecificOrigins = "AllowedHosts";
@@ -9,13 +11,17 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
+builder.Services.AddScoped<IMessengerService, MessengerService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: myAllowSpecificOrigins,
-        policy  =>
+        policy =>
         {
             policy.WithOrigins("http://localhost:5173",
                 "https://localhost:5173");
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
+            policy.AllowCredentials();
         });
 });
 

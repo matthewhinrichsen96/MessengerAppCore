@@ -51,9 +51,14 @@ public class TeamsController(
     [HttpPost("")]
     public async Task<IActionResult> CreateTeam([FromBody] Team? team)
     {
+        if (team == null)
+        {
+            return BadRequest("Request body cannot be empty");
+        }
+
         await teamRepository.CreateTeam(team);
 
-        return CreatedAtAction(nameof(GetTeamById), new {id = team.TeamId }, team);
+        return CreatedAtAction(nameof(GetTeamById), new { id = team.TeamId }, team);
     }
 
     [TypeFilter(typeof(ApiExceptionFilter))]

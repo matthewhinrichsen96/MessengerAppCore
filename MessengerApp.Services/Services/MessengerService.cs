@@ -1,9 +1,6 @@
 ﻿using System.Text.Json;
 using MessengerApp.Services.Interfaces;
 using MessengerApp.Services.Models.Messages;
-using NRedisStack;
-using NRedisStack.RedisStackCommands;
-using NRedisStack.Search;
 using StackExchange.Redis;
 
 
@@ -18,8 +15,10 @@ public class MessengerService : IMessengerService
     {
         var serializedMessage = JsonSerializer.Serialize(message);
         var redisKey = $"chat:{message.senderId}:{message.chatId}";
+        DateTime dt = DateTime.Parse(message.timeStamp, null, System.Globalization.DateTimeStyles.RoundtripKind);
+        double score = new DateTimeOffset(dt).ToUnixTimeSeconds();
 
-        _db.SortedSetAdd(redisKey, serializedMessage, message.timeStamp);
+        _db.SortedSetAdd(redisKey, serializedMessage, score);
     }
 
     public async Task<List<Message?>> GetMessages(string senderId, string chatId)
@@ -38,6 +37,7 @@ public class MessengerService : IMessengerService
                 catch (JsonException ex)
                 {
                     //_logger.LogWarning(ex, $"Invalid JSON in Redis for key {redisKey}: {entry}");
+                    Console.WriteLine(ex.InnerException);
                     return null;
                 }
             })
