@@ -9,9 +9,11 @@ public class Team
     [Key]
     public int TeamId { get; set; }
 
-    [Required]
-    public string Name { get; set; }
+    required
+    public string Name
+    { get; set; }
 
-    [Required]
-    public string Avatar { get; set; }
+    required
+    public string Avatar
+    { get; set; }
 }
