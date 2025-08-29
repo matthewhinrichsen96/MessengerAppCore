@@ -2,7 +2,6 @@
 using MessengerApp.Services.Models.Messages;
 using Microsoft.AspNetCore.Mvc;
 using MessengerApp.WebAPI.Filters;
-using MessengerApp.WebAPI.Models.Request.MessageRequest;
 
 namespace MessengerApp.WebAPI.Controllers;
 
@@ -30,11 +29,11 @@ public class MessageController(
 
     [TypeFilter(typeof(ApiExceptionFilter))]
     [HttpGet("")]
-    public async Task<IActionResult> GetMessages(MessageRequest request)
+    public async Task<IActionResult> GetMessages(string chatId, string userId)
     {
         try
         {
-            var messages = await messengerService.GetMessages(request.userId, request.chatId);
+            var messages = await messengerService.GetMessages(userId, chatId);
 
             return Ok(messages);
         }
