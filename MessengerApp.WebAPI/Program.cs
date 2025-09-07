@@ -3,9 +3,20 @@ using MessengerApp.Services.Repositories;
 using MessengerApp.Services.Services;
 using MessengerApp.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 const string myAllowSpecificOrigins = "AllowedHosts";
+
+Log.Logger = new LoggerConfiguration()
+  .MinimumLevel.Debug()
+  .WriteTo.Console()
+  .WriteTo.Seq("http://localhost:5341")
+  .Enrich.FromLogContext()
+  .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

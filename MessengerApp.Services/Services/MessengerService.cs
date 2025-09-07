@@ -6,10 +6,11 @@ using StackExchange.Redis;
 
 namespace MessengerApp.Services.Services;
 
-public class MessengerService : IMessengerService
+public class MessengerService(ILogger<MessengerService> logger) : IMessengerService
 {
     private static readonly ConnectionMultiplexer Redis = ConnectionMultiplexer.Connect("localhost");
     private readonly IDatabase _db = Redis.GetDatabase();
+    private readonly ILogger<MessengerService> _logger = logger;
 
     public void SendMessage(Message message)
     {
@@ -19,6 +20,7 @@ public class MessengerService : IMessengerService
         double score = new DateTimeOffset(dt).ToUnixTimeSeconds();
 
         _db.SortedSetAdd(redisKey, serializedMessage, score);
+        _logger.LogInformation("Sent message to {MessageSenderId}:{MessageChatId}", message.senderId, message.chatId);
     }
 
     public async Task<List<Message?>> GetMessages(string senderId, string chatId)
@@ -36,13 +38,15 @@ public class MessengerService : IMessengerService
                 }
                 catch (JsonException ex)
                 {
-                    //_logger.LogWarning(ex, $"Invalid JSON in Redis for key {redisKey}: {entry}");
+                    _logger.LogWarning(ex, $"Invalid JSON in Redis for key {redisKey}: {entry}");
                     Console.WriteLine(ex.InnerException);
                     return null;
                 }
             })
             .Where(msg => msg != null)!
             .ToList();
+
+        _logger.LogInformation("Received {MessageCount} messages from {SenderId}", messages.Count, senderId);
 
         return messages;
     }
