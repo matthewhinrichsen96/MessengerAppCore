@@ -11,16 +11,16 @@ public class UserRepository(IConfiguration configuration) : IUserRepository
 
     public async Task<User> CreateUserAsync(User user)
     {
-        _dbContext.Set<User>().Add(user);
-        await _dbContext.SaveChangesAsync();
+        _ = _dbContext.Set<User>().Add(user);
+        _ = await _dbContext.SaveChangesAsync();
 
         return user;
     }
 
     public async Task<User> UpdateUserAsync(User user)
     {
-       _dbContext.Set<User>().Update(user);
-       await _dbContext.SaveChangesAsync();
+        _ = _dbContext.Set<User>().Update(user);
+        _ = await _dbContext.SaveChangesAsync();
 
         return user;
     }
@@ -31,7 +31,7 @@ public class UserRepository(IConfiguration configuration) : IUserRepository
 
         _dbContext.RemoveRange(user!);
 
-        await _dbContext.SaveChangesAsync();
+        _ = await _dbContext.SaveChangesAsync();
     }
 
     public Task<User> GetUserByIdAsync(int userId)
@@ -52,4 +52,4 @@ public class UserRepository(IConfiguration configuration) : IUserRepository
     {
         return Task.FromResult<IEnumerable<User>>(_dbContext.Set<User>().ToList());
     }
-} 
+}

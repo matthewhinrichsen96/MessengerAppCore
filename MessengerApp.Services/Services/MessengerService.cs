@@ -15,12 +15,12 @@ public class MessengerService(ILogger<MessengerService> logger) : IMessengerServ
     public void SendMessage(Message message)
     {
         var serializedMessage = JsonSerializer.Serialize(message);
-        var redisKey = $"chat:{message.senderId}:{message.chatId}";
-        DateTime dt = DateTime.Parse(message.timeStamp, null, System.Globalization.DateTimeStyles.RoundtripKind);
+        var redisKey = $"chat:{message.SenderId}:{message.ChatId}";
+        DateTime dt = DateTime.Parse(message.TimeStamp, null, System.Globalization.DateTimeStyles.RoundtripKind);
         double score = new DateTimeOffset(dt).ToUnixTimeSeconds();
 
-        _db.SortedSetAdd(redisKey, serializedMessage, score);
-        _logger.LogInformation("Sent message to {MessageSenderId}:{MessageChatId}", message.senderId, message.chatId);
+        _ = _db.SortedSetAdd(redisKey, serializedMessage, score);
+        _logger.LogInformation("Sent message to {MessageSenderId}:{MessageChatId}", message.SenderId, message.ChatId);
     }
 
     public async Task<List<Message?>> GetMessages(string senderId, string chatId)

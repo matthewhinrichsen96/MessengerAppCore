@@ -9,14 +9,14 @@ public class TeamRepository(AppDbContext dbContext) : ITeamRepository
 
     public Task CreateTeam(Team team)
     {
-        dbContext.Teams.Add(team);
+        _ = dbContext.Teams.Add(team);
 
         return dbContext.SaveChangesAsync();
     }
 
     public Task UpdateTeam(Team team)
     {
-        dbContext.Teams.Update(team);
+        _ = dbContext.Teams.Update(team);
 
         return dbContext.SaveChangesAsync();
     }
@@ -25,12 +25,9 @@ public class TeamRepository(AppDbContext dbContext) : ITeamRepository
     {
         var team = await dbContext.Teams.FirstOrDefaultAsync(t => t.TeamId == teamId);
 
-        if (team == null)
-        {
-            throw new InvalidOperationException($"Team with ID {teamId} not found.");
-        }
+        _ = team ?? throw new InvalidOperationException($"Team with ID {teamId} not found.");
 
-        dbContext.Teams.Remove(team);
+        _ = dbContext.Teams.Remove(team);
 
         return await dbContext.SaveChangesAsync();
     }

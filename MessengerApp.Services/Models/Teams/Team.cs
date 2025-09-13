@@ -9,11 +9,7 @@ public class Team
     [Key]
     public int TeamId { get; set; }
 
-    required
-    public string Name
-    { get; set; }
+    public required string Name { get; set; }
 
-    required
-    public string Avatar
-    { get; set; }
+    public required string Avatar { get; set; }
 }

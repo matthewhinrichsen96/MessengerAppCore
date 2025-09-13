@@ -6,12 +6,12 @@ namespace MessengerApp.Services.Data;
 
 public class AppDbContext(IConfiguration configuration) : DbContext
 {
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+        _ = optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public DbSet<User> Users { get; set; }
+    public DbSet<User>? Users { get; set; }
 
-    public DbSet<Team> Teams { get; set; }
+    public DbSet<Team>? Teams { get; set; }
 }

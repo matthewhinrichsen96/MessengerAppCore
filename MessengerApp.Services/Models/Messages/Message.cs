@@ -2,17 +2,11 @@
 
 public class Message
 {
-    required
-    public string chatId
-    { get; set; }
+    public required string ChatId { get; set; }
 
-    required
-    public string senderId
-    { get; set; }
+    public required string SenderId { get; set; }
 
-    required
-    public string text
-    { get; set; }
+    public required string Text { get; set; }
 
-    public string timeStamp { get; set; }
+    public required string TimeStamp { get; set; }
 }

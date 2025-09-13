@@ -9,15 +9,11 @@ public class User
     [Key]
     public int UserId { get; set; }
 
-    [Required]
-    public string UserName { get; set; } = null!;
+    public required string UserName { get; set; } = null!;
 
-    [Required]
-    public string FirstName { get; set; } = null!;
+    public required string FirstName { get; set; } = null!;
 
-    [Required]
-    public string LastName { get; set; } = null!;
+    public required string LastName { get; set; } = null!;
 
-    [Required]
-    public string Avatar { get; set; } = null!;
+    public required string Avatar { get; set; } = null!;
 }
