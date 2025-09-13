@@ -1,8 +1,8 @@
-namespace MessengerApp.WebAPI.Models.Request.MessageRequest;
+namespace MessengerApp.WebAPI.Models.Request;
 
 public class MessageRequest
 {
-    required public string chatId { get; set; }
+    public required string ChatId { get; set; }
 
-    required public string userId { get; set; }
+    public required string UserId { get; set; }
 }

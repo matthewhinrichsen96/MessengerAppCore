@@ -2,7 +2,6 @@ using MessengerApp.Services;
 using Microsoft.EntityFrameworkCore;
 using MessengerApp.Services.Data;
 
-
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddHostedService<Worker>();
 

@@ -29,7 +29,7 @@ public class UsersController(
         return Ok(user);
     }
 
-    [HttpGet( "by-username/{userName}")]
+    [HttpGet("by-username/{userName}")]
     public async Task<IActionResult> GetUserByUserName(string userName)
     {
         var users = await userRepository.GetUserByUserNameAsync(userName);
@@ -50,7 +50,7 @@ public class UsersController(
     {
         var newUser = await userRepository.CreateUserAsync(user);
 
-        return CreatedAtAction(nameof(GetUserById), new {id = user.UserId }, newUser);
+        return CreatedAtAction(nameof(GetUserById), new { id = user.UserId }, newUser);
     }
 
     [HttpPost("bulk")]
