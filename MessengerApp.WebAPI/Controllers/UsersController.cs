@@ -9,7 +9,6 @@ namespace MessengerApp.WebAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class UsersController(
-    ILogger<UsersController> logger,
     IUserRepository userRepository) : ControllerBase
 {
 
